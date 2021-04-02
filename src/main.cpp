@@ -3,6 +3,12 @@
 #include "pico/binary_info.h"
 #include "pico/stdlib.h"
 
+#include "pico_rgb_keypad.hpp"
+
+using namespace pimoroni;
+
+PicoRGBKeypad pico_keypad;
+
 int main() {
 	bi_decl(bi_program_description("template raspberry pi pico c++ project"));
 
