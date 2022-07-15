@@ -14,11 +14,32 @@ add_subdirectory(lib/pico_rgb_keypad)
 add_executable(
 	${CMAKE_PROJECT_NAME}
 	src/main.cpp
+	src/led.cpp
+	src/usb_descriptors.cpp
 )
 
-target_link_libraries(${CMAKE_PROJECT_NAME} pico_stdlib pico_rgb_keypad)
+# Make sure TinyUSB can find tusb_config.h
+target_include_directories(
+	${CMAKE_PROJECT_NAME} PUBLIC
+	${CMAKE_CURRENT_LIST_DIR}/src
+)
+
+if("${PICO_BOARD}" MATCHES "pico_w")
+	target_link_libraries(${CMAKE_PROJECT_NAME}
+		pico_stdlib
+		pico_rgb_keypad
+		pico_cyw43_arch_none
+		tinyusb_device
+		tinyusb_board)
+else()
+	target_link_libraries(${CMAKE_PROJECT_NAME}
+		pico_stdlib
+		pico_rgb_keypad
+		tinyusb_device
+		tinyusb_board)
+endif()
 
 pico_enable_stdio_usb(${CMAKE_PROJECT_NAME} 1)
-#pico_enable_stdio_uart(${CMAKE_PROJECT_NAME} 1)
 
+# pico_enable_stdio_uart(${CMAKE_PROJECT_NAME} 1)
 pico_add_extra_outputs(${CMAKE_PROJECT_NAME})
